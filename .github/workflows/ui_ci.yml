@@ -56,7 +56,7 @@ jobs:
       - name: Create Release Pull Request or Publish to GitHub Packages
         id: changesets
         uses: changesets/action@v1
-        if: ${{ inputs.release }} == true
+        if: inputs.release == true
         with:
           version: ./update-lock.sh
           publish: npm run release
