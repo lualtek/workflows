@@ -7,8 +7,8 @@ on:
         required: false
         type: boolean
     secrets:
-      GITHUB_TOKEN:
-        required: true
+      RELEASE_TOKEN:
+        required: false
 
 jobs:
   install_test_build_release:
