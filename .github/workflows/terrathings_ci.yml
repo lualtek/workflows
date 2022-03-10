@@ -9,13 +9,12 @@ on:
       terraform_version:
         required: true
         type: string
-      ecr_image_api_url:
-        required: true
-        type: string
       release_version:
         required: true
         type: string
     secrets:
+      ECR_IMAGE_API_URL:
+        required: true
       DOPPLER_TOKEN:
         required: true
       AWS_ACCESS_KEY_ID:
@@ -31,7 +30,7 @@ env:
   terraform_version: ${{ inputs.terraform_version }}
   terraform_workspace: ${{ inputs.terraform_workspace }}
   # Right now always use dev image for CI checks
-  ecr_image_api: ${{ input.ecr_image_api_url }}:dev
+  ecr_image_api: ${{ secrets.ECR_IMAGE_API_URL }}:dev
   release_version: ${{ input.release_version }}
   DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
   continue_on_error: true

@@ -6,9 +6,6 @@ on:
       terraform_workspace:
         required: true
         type: string
-      ecr_image_api_url:
-        required: true
-        type: string
       ecr_image_api_tag:
         required: true
         type: string
@@ -19,6 +16,8 @@ on:
         required: true
         type: string
     secrets:
+      ECR_IMAGE_API_URL:
+        required: true
       DOPPLER_TOKEN:
         required: true
       AWS_ACCESS_KEY_ID:
@@ -52,7 +51,7 @@ jobs:
       env:
         current_branch: ${{ github.ref }}
         ecr_image_api_tag: ${{ inputs.ecr_image_api_tag }}
-        ecr_image_url: ${{ inputs.ecr_image_api_url }}
+        ecr_image_url: ${{ secrets.ECR_IMAGE_API_URL }}
       run: doppler run -- ./scripts/get_envs.sh
 
     - name: Configure AWS Credentials
