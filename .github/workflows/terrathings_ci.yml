@@ -6,13 +6,12 @@ on:
       terraform_workspace:
         required: true
         type: string
-      ecr_image_api:
-        required: true
-        type: string
       terraform_version:
         required: true
         type: number
     secrets:
+      ECR_IMAGE_API:
+        required: true
       DOPPLER_TOKEN:
         required: true
       AWS_ACCESS_KEY_ID:
