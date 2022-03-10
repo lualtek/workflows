@@ -14,7 +14,7 @@ on:
         type: string
       terraform_version:
         required: true
-        type: number
+        type: string
       plan_and_deploy:
         required: true
         type: string

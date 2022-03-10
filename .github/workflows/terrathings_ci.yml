@@ -8,7 +8,7 @@ on:
         type: string
       terraform_version:
         required: true
-        type: number
+        type: string
     secrets:
       ECR_IMAGE_API:
         required: true
