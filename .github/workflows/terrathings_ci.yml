@@ -26,7 +26,7 @@ defaults:
 env:
   terraform_version: ${{ inputs.terraform_version }}
   terraform_workspace: ${{ inputs.terraform_workspace }}
-  ecr_image_api: ${{ inputs.ecr_image_api }}
+  ecr_image_api: ${{ secrets.ecr_image_api }}
   DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
   continue_on_error: true
 
