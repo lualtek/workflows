@@ -31,7 +31,7 @@ env:
   terraform_workspace: ${{ inputs.terraform_workspace }}
   # Right now always use dev image for CI checks
   ecr_image_api: ${{ secrets.ECR_IMAGE_API_URL }}:dev
-  release_version: ${{ input.release_version }}
+  release_version: ${{ inputs.release_version }}
   DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
   continue_on_error: true
 
