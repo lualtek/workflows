@@ -9,7 +9,7 @@ on:
       terraform_version:
         required: true
         type: string
-      ecr_image_api:
+      ecr_image_api_url:
         required: true
         type: string
       release_version:
@@ -30,7 +30,8 @@ defaults:
 env:
   terraform_version: ${{ inputs.terraform_version }}
   terraform_workspace: ${{ inputs.terraform_workspace }}
-  ecr_image_api: ${{ input.ecr_image_api }}
+  # Right now always use dev image for CI checks
+  ecr_image_api: ${{ input.ecr_image_api_url }}:dev
   release_version: ${{ input.release_version }}
   DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
   continue_on_error: true
