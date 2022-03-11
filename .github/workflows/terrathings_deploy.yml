@@ -52,7 +52,9 @@ jobs:
         current_branch: ${{ github.ref }}
         ecr_image_api_tag: ${{ inputs.ecr_image_api_tag }}
         ecr_image_url: ${{ secrets.ECR_IMAGE_API_URL }}
-      run: doppler run -- ./scripts/get_envs.sh
+      run: |
+          echo "ecr_image_api=$(echo $ecr_image_url):$(echo $ecr_image_api_tag)" >> $GITHUB_ENV
+          echo "release_version=$(echo $ecr_image_api_tag)" >> $GITHUB_ENV
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
