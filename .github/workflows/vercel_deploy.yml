@@ -10,11 +10,11 @@ on:
         required: false
         type: string
     secrets:
-      vercel_token:
+      VERCEL_TOKEN:
         required: true
-      vercel_project_id:
+      VERCEL_PROJECT_ID:
         required: true
-      vercel_org_id:
+      VERCEL_ORG_ID:
         required: true
 
 jobs:
@@ -25,8 +25,8 @@ jobs:
       - uses: amondnet/vercel-action@v20
         with:
           scope: lualtek
-          vercel-token: ${{ secrets.vercel_token }}
-          vercel-org-id: ${{ secrets.vercel_org_id }}
-          vercel-project-id: ${{ secrets.vercel_project_id }}
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           vercel-args: ${{ inputs.vercel_args }}
           alias-domains: ${{ inputs.alias }}
