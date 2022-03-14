@@ -2,7 +2,16 @@ name: Jest unit test
 
 on:
   workflow_call:
-
+    inputs:
+      registry_url:
+        required: false
+        type: string
+        # NPM registry
+        default: https://registry.npmjs.org/
+    secrets:
+      NPM_TOKEN:
+        required: false
+        type: string
 
 jobs:
   test:
@@ -17,6 +26,7 @@ jobs:
       - name: Use Node Version ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
+          registry-url: ${{ inputs.registry_url }}
           node-version: ${{ matrix.node-version }}
 
       - name: Get yarn cache directory path
@@ -48,6 +58,8 @@ jobs:
       - name: Install Dependencies
         run: yarn --frozen-lockfile
         if: steps.cache-yarn-cache.outputs.cache-hit != 'true' || steps.cache-node-modules.outputs.cache-hit != 'true'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Unit tests
         run: yarn test --cacheDirectory .jest-cache
