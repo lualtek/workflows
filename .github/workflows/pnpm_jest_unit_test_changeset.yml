@@ -47,7 +47,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Unit tests
-        run: pnpm test --cacheDirectory .jest-cache
+        run: pnpm test
 
       - name: Create Release Pull Request or trigger release on Vercel
         id: changesets
