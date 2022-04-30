@@ -1,0 +1,65 @@
+name: Jest unit test
+
+on:
+  workflow_call:
+    inputs:
+      registry_url:
+        required: false
+        type: string
+        # NPM registry
+        default: https://registry.npmjs.org/
+    secrets:
+      RELEASE_TOKEN:
+        required: false
+      DOPPLER_TOKEN:
+        required: false
+
+jobs:
+  test_changeset:
+    name: Test and check changeset
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Doppler CLI
+        uses: dopplerhq/cli-action@v1
+
+      - name: Use Node Version ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Cache pnpm modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-
+
+      - uses: pnpm/action-setup@v2.1.0
+        with:
+          run_install: true
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Unit tests
+        run: pnpm test --cacheDirectory .jest-cache
+
+      - name: Create Release Pull Request or trigger release on Vercel
+        id: changesets
+        uses: changesets/action@v1
+        if: inputs.release == true
+        with:
+          version: pnpm changeset version
+          publish: echo "Update version"
+          commit: "ci: release"
+          title: "ci: release"
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          NPM_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+
+
