@@ -1,22 +1,31 @@
-name: Jest unit test
+name: Vercel deploy with custom pre-deploy command
 
 on:
   workflow_call:
     inputs:
-      registry_url:
+      alias:
         required: false
         type: string
-        # NPM registry
-        default: https://registry.npmjs.org/
+      vercel_args:
+        required: false
+        type: string
+      command_pre_deploy:
+        required: true
+        type: string
     secrets:
+      VERCEL_TOKEN:
+        required: true
+      VERCEL_PROJECT_ID:
+        required: true
+      VERCEL_ORG_ID:
+        required: true
       RELEASE_TOKEN:
         required: false
       DOPPLER_TOKEN:
         required: false
 
 jobs:
-  test_changeset:
-    name: Test and check changeset
+  deploy:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -46,23 +55,16 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Unit tests
-        run: pnpm test
+      - name: Run custom command
+        run: ${{ inputs.command_pre_deploy }}
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
 
-      - name: Create Release Pull Request or trigger release on Vercel
-        id: changesets
-        uses: changesets/action@v1
-        if: inputs.release == true
+      - uses: amondnet/vercel-action@v20
         with:
-          version: pnpm changeset version
-          publish: echo "Update version"
-          commit: "ci: release"
-          title: "ci: release"
-        env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-          NPM_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-
-
+          scope: lualtek
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: ${{ inputs.vercel_args }}
+          alias-domains: ${{ inputs.alias }}
