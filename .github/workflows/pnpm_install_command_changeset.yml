@@ -1,0 +1,72 @@
+name: PNPM Install, command run and Changeset
+
+on:
+  workflow_call:
+    inputs:
+      registry_url:
+        required: false
+        type: string
+        # NPM registry
+        default: https://registry.npmjs.org/
+      command:
+        required: true
+        type: string
+    secrets:
+      RELEASE_TOKEN:
+        required: false
+      DOPPLER_TOKEN:
+        required: false
+
+jobs:
+  run_and_changeset:
+    name: Install and run command
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Doppler CLI
+        uses: dopplerhq/cli-action@v1
+
+      - name: Use Node Version ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Cache pnpm modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-
+
+      - uses: pnpm/action-setup@v2.1.0
+        with:
+          run_install: true
+          version: 7.1
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Run command
+        run: |
+          ${{ inputs.command }}
+        env:
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+
+      - name: Create Release Pull Request or create tag
+        id: changesets
+        uses: changesets/action@v1
+        if: inputs.release == true
+        with:
+          version: pnpm changeset version
+          publish: echo "Update version"
+          commit: "ci: release"
+          title: "ci: release"
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          NPM_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+
+
