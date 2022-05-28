@@ -1,33 +1,22 @@
-name: Vercel deploy with custom pre-deploy command
+name: Jest unit test
 
 on:
   workflow_call:
     inputs:
-      alias:
+      registry_url:
         required: false
         type: string
-      vercel_args:
-        required: false
-        type: string
-      command_pre_deploy:
-        required: false
-        type: string
+        # NPM registry
+        default: https://registry.npmjs.org/
     secrets:
-      VERCEL_TOKEN:
-        required: true
-      VERCEL_PROJECT_ID:
-        required: true
-      VERCEL_ORG_ID:
-        required: true
       RELEASE_TOKEN:
         required: false
       DOPPLER_TOKEN:
         required: false
-      GITHUB_TOKEN:
-        required: false
 
 jobs:
-  deploy:
+  test_changeset:
+    name: Test and check changeset
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -57,18 +46,9 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Run custom command
-        if: inputs.command_pre_deploy != null
-        run: ${{ inputs.command_pre_deploy }}
+      - name: Unit tests
+        run: pnpm test
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
 
-      - uses: amondnet/vercel-action@v20
-        with:
-          scope: lualtek
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          vercel-args: ${{ inputs.vercel_args }}
-          alias-domains: ${{ inputs.alias }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+
