@@ -23,8 +23,6 @@ on:
         required: false
       DOPPLER_TOKEN:
         required: false
-      GITHUB_TOKEN:
-        required: false
 
 jobs:
   deploy:
@@ -71,4 +69,4 @@ jobs:
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           vercel-args: ${{ inputs.vercel_args }}
           alias-domains: ${{ inputs.alias }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.RELEASE_TOKEN }}
