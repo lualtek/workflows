@@ -30,6 +30,8 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+          registry-url: ${{ inputs.registry_url }}
 
       - name: Cache pnpm modules
         uses: actions/cache@v2
