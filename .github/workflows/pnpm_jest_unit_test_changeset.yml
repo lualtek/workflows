@@ -9,7 +9,9 @@ on:
         # NPM registry
         default: https://registry.npmjs.org/
     secrets:
-      RELEASE_TOKEN:
+      NPM_TOKEN:
+        required: false
+      GH_TOKEN:
         required: false
       DOPPLER_TOKEN:
         required: false
@@ -44,7 +46,7 @@ jobs:
           run_install: true
           version: 7.1
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Unit tests
         run: pnpm test
@@ -61,8 +63,8 @@ jobs:
           commit: "ci: release"
           title: "ci: release"
         env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-          NPM_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
 

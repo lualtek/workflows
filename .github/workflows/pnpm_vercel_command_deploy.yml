@@ -19,7 +19,9 @@ on:
         required: true
       VERCEL_ORG_ID:
         required: true
-      RELEASE_TOKEN:
+      NPM_TOKEN:
+        required: false
+      GH_TOKEN:
         required: false
       DOPPLER_TOKEN:
         required: false
@@ -69,4 +71,4 @@ jobs:
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           vercel-args: ${{ inputs.vercel_args }}
           alias-domains: ${{ inputs.alias }}
-          github-token: ${{ secrets.RELEASE_TOKEN }}
+          github-token: ${{ secrets.GH_TOKEN }}

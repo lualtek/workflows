@@ -9,7 +9,7 @@ on:
         # NPM registry
         default: https://registry.npmjs.org/
     secrets:
-      RELEASE_TOKEN:
+      NPM_TOKEN:
         required: false
       DOPPLER_TOKEN:
         required: false
