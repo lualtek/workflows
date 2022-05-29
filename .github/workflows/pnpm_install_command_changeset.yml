@@ -61,7 +61,7 @@ jobs:
 
       - name: PR Comment
         uses: actions/github-script@v4
-        if: inputs.pr_comment == true
+        if: inputs.pr_comment
         env:
           out_log: ${{ steps.command.outputs.stdout }}
           title: ${{ inputs.pr_title }}
