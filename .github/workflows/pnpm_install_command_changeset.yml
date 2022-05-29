@@ -54,7 +54,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Run custom command
-        uses: lasalefamine/gha-command@v1
+        uses: lasalefamine/gha-command@master
         id: command
         with:
           run: ${{ inputs.command }}
