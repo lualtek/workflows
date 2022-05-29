@@ -54,9 +54,12 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Run custom command
-        # set output for command run
-        run: echo "::set-output name=stdout::$(${{ inputs.command }})"
         id: command
+        # set output for command run
+        run: |
+          ${{ inputs.command }} > command.log
+          cat command.log
+          echo "::set-output name=stdout::$(cat /command.log)"
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
 
@@ -65,7 +68,7 @@ jobs:
         if: inputs.pr_comment
         env:
           out_log: ${{ steps.command.outputs.stdout }}
-          title: ${{ inputs.pr_title }}
+          title: ${{ inputs.pr_comment.title }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
