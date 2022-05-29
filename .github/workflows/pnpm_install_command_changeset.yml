@@ -55,7 +55,7 @@ jobs:
 
       - name: Run custom command
         # set output for command run
-        run: ::set-output name=stdout::$(${{ inputs.command }})
+        run: echo "::set-output name=stdout::$(${{ inputs.command }})"
         id: command
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
