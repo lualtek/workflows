@@ -3,6 +3,12 @@ name: Install, run command and Changeset
 on:
   workflow_call:
     inputs:
+      pr_comment:
+        required: false
+        type: string
+      pr_comment_title:
+        required: false
+        type: string
       command:
         required: true
         type: string
@@ -21,8 +27,6 @@ jobs:
     strategy:
       matrix:
         node-version: [16.x]
-    outputs:
-      command_log: ${{ steps.command.outputs.stdout }}
     steps:
       - uses: actions/checkout@v2
       - name: Install Doppler CLI
@@ -54,6 +58,34 @@ jobs:
         id: command
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+
+      - name: PR Comment
+        uses: actions/github-script@v4
+        if: inputs.pr_comment == true
+        env:
+          out_log: ${{ steps.command.outputs.stdout }}
+          title: ${{ inputs.pr_title }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const CODE_BLOCK = '```';
+
+
+            const output = `
+            ### ${ process.env.pr_comment_title }
+            ${ CODE_BLOCK }diff
+            ${ process.env.out_log }
+            ${ CODE_BLOCK }
+
+
+            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Workflow: \`${{ github.workflow }}\`*`;
+
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            });
 
       - name: Create Release Pull Request or trigger release on Vercel
         id: changesets
