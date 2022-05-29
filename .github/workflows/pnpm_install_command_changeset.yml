@@ -57,8 +57,7 @@ jobs:
         uses: lasalefamine/gha-command@master
         id: command
         with:
-          run: |
-            ${{ inputs.command }}
+          run: ${{ inputs.command }}
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
 
