@@ -21,6 +21,8 @@ jobs:
     strategy:
       matrix:
         node-version: [16.x]
+    outputs:
+      command_log: ${{ steps.command.outputs.command_log }}
     steps:
       - uses: actions/checkout@v2
       - name: Install Doppler CLI
