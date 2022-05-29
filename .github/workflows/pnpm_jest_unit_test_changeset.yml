@@ -48,6 +48,15 @@ jobs:
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
 
+      - uses: ArtiomTr/jest-coverage-report-action@v2
+        with:
+          test-script: pnpm test
+          coverage-file: ./coverage/coverage-final.json
+          base-coverage-file: ./coverage/coverage-final.json
+          skip-step: all
+        env:
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+
       - name: Create Release Pull Request or trigger release on Vercel
         id: changesets
         uses: changesets/action@v1
