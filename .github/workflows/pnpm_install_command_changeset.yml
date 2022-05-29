@@ -1,11 +1,11 @@
 name: Install, run command and Changeset
 
 on:
-  inputs:
-    command:
-      required: true
-      type: string
   workflow_call:
+    inputs:
+      command:
+        required: true
+        type: string
     secrets:
       NPM_TOKEN:
         required: false
