@@ -48,7 +48,8 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Run custom command
-        run: ${{ inputs.command }}
+        run: echo "::set-output name=command_log::$(${{ inputs.command }})"
+        id: command
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
 
