@@ -57,7 +57,7 @@ jobs:
         id: command
         # set output for command run
         run: |
-          $(${{ inputs.command }}) > command.log
+          "$(${{ inputs.command }})" > command.log
           cat command.log
           echo "::set-output name=stdout::$(cat /command.log)"
         env:
