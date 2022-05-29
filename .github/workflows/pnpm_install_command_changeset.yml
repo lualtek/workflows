@@ -56,7 +56,10 @@ jobs:
       - name: Run custom command
         id: command
         # set output for command run
-        run: ${{ inputs.command }}
+        run: |
+          ${{ inputs.command }} > command.log
+          cat command.log
+          echo "::set-output name=stdout::$(cat /command.log)"
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
 
