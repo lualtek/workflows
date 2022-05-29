@@ -48,14 +48,14 @@ jobs:
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
 
-      - uses: ArtiomTr/jest-coverage-report-action@v2
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()    # run this step even if previous step failed
         with:
-          test-script: pnpm test
-          coverage-file: ./coverage/coverage-final.json
-          base-coverage-file: ./coverage/coverage-final.json
-          skip-step: all
-        env:
-          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+          name: Jest Tests            # Name of the check run which will be created
+          path: coverage/clover.xml    # Path to test results
+          reporter: jest-junit
+
 
       - name: Create Release Pull Request or trigger release on Vercel
         id: changesets
