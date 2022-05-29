@@ -75,7 +75,7 @@ jobs:
 
             const output = `
             ### ${ process.env.title }
-            ${ CODE_BLOCK }diff
+            ${ CODE_BLOCK }bash
             ${ process.env.out_log }
             ${ CODE_BLOCK }
 
