@@ -5,7 +5,7 @@ on:
     inputs:
       pr_comment:
         required: false
-        type: string
+        type: boolean
       pr_comment_title:
         required: false
         type: string
@@ -54,7 +54,8 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Run custom command
-        run: ${{ inputs.command }}
+        # set output for command run
+        run: ::set-output name=stdout::$(${{ inputs.command }})
         id: command
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
@@ -72,7 +73,7 @@ jobs:
 
 
             const output = `
-            ### ${ process.env.pr_comment_title }
+            ### ${ process.env.title }
             ${ CODE_BLOCK }diff
             ${ process.env.out_log }
             ${ CODE_BLOCK }
