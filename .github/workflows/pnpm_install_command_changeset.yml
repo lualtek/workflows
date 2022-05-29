@@ -58,6 +58,7 @@ jobs:
         id: command
         with:
           run: ${{ inputs.command }}
+          shell: bash
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
 
