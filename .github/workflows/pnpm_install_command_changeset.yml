@@ -57,7 +57,7 @@ jobs:
         id: command
         # set output for command run
         run: |
-          ${{ inputs.command }} > command.log
+          $(${{ inputs.command }}) > command.log
           cat command.log
           echo "::set-output name=stdout::$(cat /command.log)"
         env:
@@ -68,7 +68,7 @@ jobs:
         if: inputs.pr_comment
         env:
           out_log: ${{ steps.command.outputs.stdout }}
-          title: ${{ inputs.pr_comment.title }}
+          title: ${{ inputs.pr_comment_title }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
