@@ -54,11 +54,10 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Run custom command
-        uses: mathiasvr/command-output@v1
+        uses: lasalefamine/gha-command@v1
         id: command
         with:
           run: ${{ inputs.command }}
-          shell: bash
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
 
