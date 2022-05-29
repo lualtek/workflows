@@ -22,7 +22,7 @@ jobs:
       matrix:
         node-version: [16.x]
     outputs:
-      command_log: ${{ steps.command.outputs.command_log }}
+      command_log: ${{ steps.command.outputs.stdout }}
     steps:
       - uses: actions/checkout@v2
       - name: Install Doppler CLI
@@ -50,7 +50,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Run custom command
-        run: echo "::set-output name=command_log::$(${{ inputs.command }})"
+        run: ${{ inputs.command }}
         id: command
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
