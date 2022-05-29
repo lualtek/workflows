@@ -54,12 +54,10 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Run custom command
+        uses: mathiasvr/command-output@v1
         id: command
-        # set output for command run
-        run: |
-          "$(${{ inputs.command }})" > command.log
-          cat command.log
-          echo "::set-output name=stdout::$(cat /command.log)"
+        with:
+          run: ${{ inputs.command }}
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
 
