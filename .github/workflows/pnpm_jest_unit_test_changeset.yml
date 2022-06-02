@@ -2,6 +2,10 @@ name: Jest unit test
 
 on:
   workflow_call:
+    inputs:
+      with_report:
+        type: boolean
+        default: true
     secrets:
       NPM_TOKEN:
         required: false
