@@ -3,7 +3,7 @@ name: Jest unit test
 on:
   workflow_call:
     inputs:
-      with_report:
+      report:
         type: boolean
         default: true
     secrets:
@@ -54,7 +54,7 @@ jobs:
 
       - name: Test Report
         uses: dorny/test-reporter@v1
-        if: success() || failure()    # run this step even if previous step failed
+        if: inputs.report && (success() || failure())    # run this step even if previous step failed
         with:
           name: Jest Tests
           path: coverage/jest-*.xml
