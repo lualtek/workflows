@@ -9,6 +9,8 @@ on:
     secrets:
       RELEASE_TOKEN:
         required: false
+      DISCORD_WEBHOOK:
+        required: true
 
 jobs:
   install_test_build_release:
@@ -66,4 +68,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
           NPM_TOKEN: ${{ secrets.RELEASE_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+
+      - name: Send a Discord notification
+        if: steps.changesets.outputs.published == 'true'
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          title: "Release UI Components"
+          description: "UI components released on NPM"
 
