@@ -44,7 +44,7 @@ jobs:
       uses: actions/checkout@master
 
     - name: Install Doppler CLI
-      uses: dopplerhq/cli-action@v1
+      uses: dopplerhq/cli-action@v2
 
     - name: Get ecr_image_api and release_version to env
       id: get_envs

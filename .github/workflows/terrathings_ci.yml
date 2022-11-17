@@ -44,7 +44,7 @@ jobs:
       uses: actions/checkout@master
 
     - name: Install Doppler CLI
-      uses: dopplerhq/cli-action@v1
+      uses: dopplerhq/cli-action@v2
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
