@@ -57,6 +57,7 @@ jobs:
           version: 7.16
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          HUSKY: 0
 
       - name: Run custom command
         if: inputs.command_pre_deploy != null
