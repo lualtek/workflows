@@ -6,6 +6,9 @@ on:
       report:
         type: boolean
         default: true
+      release:
+        type: boolean
+        default: false
     secrets:
       NPM_TOKEN:
         required: false
