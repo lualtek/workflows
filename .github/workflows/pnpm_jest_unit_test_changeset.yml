@@ -9,6 +9,8 @@ on:
       release:
         type: boolean
         default: false
+      release_command:
+        type: string
     secrets:
       NPM_TOKEN:
         required: false
@@ -71,7 +73,8 @@ jobs:
         if: inputs.release == true
         with:
           version: pnpm changeset version
-          publish: echo "Update version"
+          # Run custom release command
+          publish: ${{ inputs.release_command }}
           commit: "ci: release"
           title: "ci: release"
         env:
