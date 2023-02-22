@@ -1,0 +1,115 @@
+name: Terraform CI
+
+on:
+  workflow_call:
+    inputs:
+      terraform_workspace:
+        required: true
+        type: string
+      ecr_image_api_tag:
+        required: true
+        type: string
+      terraform_version:
+        required: true
+        type: string
+      plan_and_deploy:
+        required: true
+        type: string
+    secrets:
+      ECR_IMAGE_API_URL:
+        required: true
+      DOPPLER_TOKEN:
+        required: true
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+
+defaults:
+  run:
+    working-directory: src/stack
+
+env:
+  terraform_version: ${{ inputs.terraform_version }}
+  terraform_workspace: ${{ inputs.terraform_workspace }}
+  DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+  continue_on_error: false
+
+jobs:
+  terraform-actions:
+    name: Terraflow
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@master
+
+    - name: Install Doppler CLI
+      uses: dopplerhq/cli-action@v2
+
+    - name: Get ecr_image_api and release_version to env
+      id: get_envs
+      env:
+        current_branch: ${{ github.ref }}
+        ecr_image_api_tag: ${{ inputs.ecr_image_api_tag }}
+        ecr_image_url: ${{ secrets.ECR_IMAGE_API_URL }}
+      run: |
+          echo "ecr_image_api=$(echo $ecr_image_url):$(echo $ecr_image_api_tag)" >> $GITHUB_ENV
+          echo "release_version=$(echo $ecr_image_api_tag)" >> $GITHUB_ENV
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: eu-central-1
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: ${{ env.terraform_version }}
+
+    - name: Terraform Fmt
+      id: fmt
+      run: doppler run --name-transformer tf-var -- terraform fmt -check -diff
+      continue-on-error: ${{ env.continue_on_error }}
+
+    - name: Terraform Init
+      id: init
+      run: doppler run --name-transformer tf-var -- terraform init -no-color
+      continue-on-error: ${{ env.continue_on_error }}
+
+    - name: Terraform Workspace
+      id: workspace
+      run: terraform workspace select ${{ env.terraform_workspace }} || terraform workspace new ${{ env.terraform_workspace }}
+      continue-on-error: ${{ env.continue_on_error }}
+
+    - name: Terraform Validate
+      id: validate
+      run: doppler run --name-transformer tf-var -- terraform validate -no-color
+      continue-on-error: ${{ env.continue_on_error }}
+
+    - name: Terraform Plan
+      id: plan
+      run: doppler run --name-transformer tf-var -- terraform plan -no-color
+      continue-on-error: ${{ env.continue_on_error }}
+      env:
+        TF_VAR_ecr_image_api: ${{ env.ecr_image_api }}
+        TF_VAR_stack_release_version: ${{ env.release_version }}
+
+    - name: Terraform Apply
+      if: ${{ inputs.plan_and_deploy == 'true' }}
+      id: apply
+      run: doppler run --name-transformer tf-var -- terraform apply -no-color -auto-approve
+      env:
+        TF_VAR_ecr_image_api: ${{ env.ecr_image_api }}
+        TF_VAR_stack_release_version: ${{ env.release_version }}
+
+    - name: 'End results'
+      shell: bash
+      run: |
+        echo fmt
+        test ${{ steps.fmt.outputs.exitcode }} -eq 0
+        echo init
+        test ${{ steps.init.outputs.exitcode }} -eq 0
+        echo validate
+        test ${{ steps.validate.outputs.exitcode }} -eq 0
