@@ -27,8 +27,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@lualtek'
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@lualtek"
 
       - run: npm i -g npm@8
 
@@ -55,6 +55,21 @@ jobs:
       - name: Test
         run: npm run test
 
+      - name: ⌛ rate
+        shell: pwsh
+        run: |
+          # get currently authenticated user rate limit info
+          $rate = gh api rate_limit | convertfrom-json | select -expandproperty rate
+
+          # if we don't have at least 100 requests left, wait until reset
+          if ($rate.remaining -lt 10) {
+              $wait = ($rate.reset - (Get-Date (Get-Date).ToUniversalTime() -UFormat %s))
+              echo "Rate limit remaining is $($rate.remaining), waiting for $($wait) seconds to reset"
+              sleep $wait
+              $rate = gh api rate_limit | convertfrom-json | select -expandproperty rate
+              echo "Rate limit has reset to $($rate.remaining) requests"
+          }
+
       - name: Create Release Pull Request or Publish to GitHub Packages
         id: changesets
         uses: changesets/action@v1
@@ -76,4 +91,3 @@ jobs:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           title: "Release UI Components"
           description: "UI components released on NPM"
-
