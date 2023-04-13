@@ -55,18 +55,20 @@ jobs:
       - name: Test
         run: npm run test
 
-      - name: ⌛ rate
+      - name: ⌛ rate search
         shell: pwsh
         run: |
           # get currently authenticated user rate limit info
-          $rate = gh api rate_limit | convertfrom-json | select -expandproperty rate
+          $rate = gh api rate_limit | convertfrom-json | select -expandproperty resources
+          $rate = $rate.search
 
           # if we don't have at least 100 requests left, wait until reset
           if ($rate.remaining -lt 10) {
               $wait = ($rate.reset - (Get-Date (Get-Date).ToUniversalTime() -UFormat %s))
               echo "Rate limit remaining is $($rate.remaining), waiting for $($wait) seconds to reset"
               sleep $wait
-              $rate = gh api rate_limit | convertfrom-json | select -expandproperty rate
+              $rate = gh api rate_limit | convertfrom-json | select -expandproperty resources
+              $rate = $rate.search
               echo "Rate limit has reset to $($rate.remaining) requests"
           }
         env:
