@@ -85,7 +85,7 @@ jobs:
               echo "Rate limit has reset to $($rate.remaining) requests"
           }
         env:
-          GH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
       - name: Create Release Pull Request or trigger release on Vercel
         id: changesets
