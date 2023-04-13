@@ -104,6 +104,7 @@ jobs:
       env:
         TF_VAR_ecr_image_api: ${{ env.ecr_image_api }}
         TF_VAR_stack_release_version: ${{ env.release_version }}
+        TF_VAR_ecr_image_data_analysis: ${{ env.ecr_image_data_analysis }}
 
     - name: Terraform Apply
       if: ${{ inputs.plan_and_deploy == 'true' }}
@@ -112,6 +113,7 @@ jobs:
       env:
         TF_VAR_ecr_image_api: ${{ env.ecr_image_api }}
         TF_VAR_stack_release_version: ${{ env.release_version }}
+        TF_VAR_ecr_image_data_analysis: ${{ env.ecr_image_data_analysis }}
 
     - name: 'End results'
       shell: bash
