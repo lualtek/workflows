@@ -69,6 +69,8 @@ jobs:
               $rate = gh api rate_limit | convertfrom-json | select -expandproperty rate
               echo "Rate limit has reset to $($rate.remaining) requests"
           }
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
 
       - name: Create Release Pull Request or Publish to GitHub Packages
         id: changesets
