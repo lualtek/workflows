@@ -9,6 +9,9 @@ on:
       ecr_image_api_tag:
         required: true
         type: string
+      ecr_data_analysis_tag:
+        required: false
+        type: string
       terraform_version:
         required: true
         type: string
@@ -18,6 +21,8 @@ on:
     secrets:
       ECR_IMAGE_API_URL:
         required: true
+      ECR_DATA_ANALYSIS_URL:
+        required: false
       DOPPLER_TOKEN:
         required: true
       AWS_ACCESS_KEY_ID:
@@ -52,9 +57,13 @@ jobs:
         current_branch: ${{ github.ref }}
         ecr_image_api_tag: ${{ inputs.ecr_image_api_tag }}
         ecr_image_url: ${{ secrets.ECR_IMAGE_API_URL }}
+        ecr_data_analysis_tag: ${{ inputs.ecr_data_analysis_tag }}
+        ecr_data_analysis_url: ${{ secrets.ECR_DATA_ANALYSIS_URL }}
+
       run: |
           echo "ecr_image_api=$(echo $ecr_image_url):$(echo $ecr_image_api_tag)" >> $GITHUB_ENV
           echo "release_version=$(echo $ecr_image_api_tag)" >> $GITHUB_ENV
+          echo "ecr_image_data_analysis=$(echo $ecr_data_analysis_url):$(echo $ecr_data_analysis_tag)" >> $GITHUB_ENV
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v2
