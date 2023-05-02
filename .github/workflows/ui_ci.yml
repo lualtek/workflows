@@ -55,34 +55,32 @@ jobs:
       - name: Test
         run: npm run test
 
-      - name: ⌛ rate search
-        shell: pwsh
-        run: |
-          # get currently authenticated user rate limit info
-          $rate = gh api rate_limit | convertfrom-json | select -expandproperty resources
-          $rate = $rate.search
-
-          # if we don't have at least 100 requests left, wait until reset
-          if ($rate.remaining -lt 10) {
-              $wait = ($rate.reset - (Get-Date (Get-Date).ToUniversalTime() -UFormat %s))
-              echo "Rate limit remaining is $($rate.remaining), waiting for $($wait) seconds to reset"
-              sleep $wait
-              $rate = gh api rate_limit | convertfrom-json | select -expandproperty resources
-              $rate = $rate.search
-              echo "Rate limit has reset to $($rate.remaining) requests"
-          }
-        env:
-          GH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+      # - name: Create Release Pull Request or Publish to GitHub Packages
+      #   id: changesets
+      #   uses: changesets/action@v1
+      #   if: inputs.release == true
+      #   with:
+      #     version: ./update-lock.sh
+      #     publish: npm run release
+      #     commit: "ci: release"
+      #     title: "ci: release"
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+      #     NPM_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+      #     NODE_AUTH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
 
       - name: Create Release Pull Request or Publish to GitHub Packages
+        uses: Wandalen/wretry.action@master
         id: changesets
-        uses: changesets/action@v1
-        if: inputs.release == true
         with:
-          version: ./update-lock.sh
-          publish: npm run release
-          commit: "ci: release"
-          title: "ci: release"
+          action: changesets/action@v1
+          with: |
+            version: ./update-lock.sh
+            publish: npm run release
+            commit: "ci: release"
+            title: "ci: release"
+          attempt_limit: 3
+          attempt_delay: 10000
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
           NPM_TOKEN: ${{ secrets.RELEASE_TOKEN }}
