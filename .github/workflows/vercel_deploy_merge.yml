@@ -21,11 +21,11 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          ref: ${{ github.event.inputs.from }}
-      - name: Merge to ${{ github.event.inputs.to }} branch 🔁
+          ref: ${{ inputs.from }}
+      - name: Merge to ${{ inputs.to }} branch 🔁
         uses: LasaleFamine/action-ff-merge@v1
         with:
-          from: ${{ github.event.inputs.from }}
-          to: ${{ github.event.inputs.to }}
+          from: ${{ inputs.from }}
+          to: ${{ inputs.to }}
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
