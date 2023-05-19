@@ -11,6 +11,10 @@ on:
         required: false
       DISCORD_WEBHOOK:
         required: true
+      LUALTEK_RELEASE_APP_ID:
+        required: true
+      LUALTEK_RELEASE_APP_PRIVATE_KEY:
+        required: true
 
 jobs:
   install_test_build_release:
