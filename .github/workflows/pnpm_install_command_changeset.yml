@@ -12,6 +12,12 @@ on:
       command:
         required: true
         type: string
+      release:
+        type: boolean
+        default: false
+      release_command:
+        type: string
+        default: "echo 'Release command'"
     secrets:
       NPM_TOKEN:
         required: false
@@ -96,7 +102,7 @@ jobs:
         if: inputs.release == true
         with:
           version: pnpm changeset version
-          publish: echo "Update version"
+          publish: ${{ inputs.release_command }}
           commit: "ci: release"
           title: "ci: release"
         env:
