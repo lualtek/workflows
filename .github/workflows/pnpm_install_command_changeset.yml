@@ -57,7 +57,7 @@ jobs:
       - uses: pnpm/action-setup@v2.2.4
         with:
           run_install: true
-          version: 8.3
+          version: 8
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           HUSKY: 0
@@ -71,7 +71,7 @@ jobs:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
 
       - name: PR Comment
-        uses: actions/github-script@v4
+        uses: actions/github-script@v6
         if: inputs.pr_comment
         env:
           out_log: ${{ steps.command.outputs.stdout }}
@@ -91,7 +91,7 @@ jobs:
 
             *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Workflow: \`${{ github.workflow }}\`*`;
 
-            github.issues.createComment({
+            github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
