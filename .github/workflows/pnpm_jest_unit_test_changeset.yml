@@ -14,9 +14,9 @@ on:
     secrets:
       NPM_TOKEN:
         required: true
-      # Used to download private packages. If not set, it will use the NPM_TOKEN_RELEASE
+      # Used to download private packages
       NPM_TOKEN_DOWNLOAD:
-        required: false
+        required: true
       DOPPLER_TOKEN:
         required: false
       COMMIT_KEY:
@@ -60,7 +60,7 @@ jobs:
           run_install: true
           version: 8
         env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_DOWNLOAD || secrets.NPM_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_DOWNLOAD }}
           HUSKY: 0
 
       - name: Unit tests
