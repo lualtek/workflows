@@ -62,6 +62,7 @@ jobs:
           version: 8
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_DOWNLOAD }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_DOWNLOAD }}
           HUSKY: 0
 
       - name: Unit tests
