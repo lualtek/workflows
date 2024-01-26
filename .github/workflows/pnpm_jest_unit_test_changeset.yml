@@ -1,4 +1,4 @@
-name: Jest unit test
+name: Jest unit test + Changeset
 
 on:
   workflow_call:
@@ -13,8 +13,9 @@ on:
         type: string
     secrets:
       NPM_TOKEN:
-        required: false
-      GH_TOKEN:
+        required: true
+      # Used to download private packages. If not set, it will use the NPM_TOKEN_RELEASE
+      NPM_TOKEN_DOWNLOAD:
         required: false
       DOPPLER_TOKEN:
         required: false
@@ -31,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [18.x]
     steps:
       - uses: actions/checkout@v3
         with:
@@ -59,7 +60,7 @@ jobs:
           run_install: true
           version: 8
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_DOWNLOAD || secrets.NPM_TOKEN }}
           HUSKY: 0
 
       - name: Unit tests
