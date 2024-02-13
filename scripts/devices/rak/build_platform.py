@@ -112,24 +112,25 @@ def install_platform(fqbn):
 
 
 def install_dependencies(build_dir):
-    """Install library dependencies listed in the library.properties file."""
+    """Install library dependencies listed in the library.properties file with version constraints."""
     properties_file = build_dir / "library.properties"
     try:
-        with open(properties_file, "r") as file:
+        with open(properties_file, 'r') as file:
             for line in file:
                 if line.startswith("depends="):
-                    dependencies = line.split("=")[1].strip().split(",")
+                    dependencies = line.split("=")[1].strip().split(',')
                     for dep in dependencies:
-                        ColorPrint.print_info(f"Installing dependency: {dep}")
-                        run_command(
-                            f'arduino-cli lib install "{dep}"',
-                            f"FAILED to install dependency {dep}",
-                            True,
-                        )
+                        # Trim any leading/trailing spaces and remove version constraints for the CLI command
+                        dep_name = dep.split(' ')[0].strip()
+                        dep_version = ''.join(dep.split(' ')[1:]) if ' ' in dep else ""
+                        dep_version = dep_version.replace('(', '').replace(')', '').strip()
+                        dep_install_cmd = f"{dep_name}"
+                        if dep_version:  # Add version constraint if present
+                            dep_install_cmd += f"@{dep_version}"
+                        ColorPrint.print_info(f"Installing dependency: {dep_install_cmd}")
+                        run_command(f"arduino-cli lib install \"{dep_install_cmd}\"", f"FAILED to install dependency {dep_install_cmd}", True)
     except FileNotFoundError:
-        ColorPrint.print_fail(
-            "No library.properties file found for dependency installation."
-        )
+        ColorPrint.print_fail("No library.properties file found for dependency installation.")
         sys.exit(-1)
 
 
