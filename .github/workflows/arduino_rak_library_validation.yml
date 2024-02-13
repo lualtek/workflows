@@ -1,14 +1,7 @@
 name: Arduino RAK Library Validation
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-
-# Cancel any previous runs of this workflow
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  workflow_call:
 
 jobs:
   lint:
