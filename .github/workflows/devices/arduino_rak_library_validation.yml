@@ -1,0 +1,47 @@
+name: Arduino RAK Library Validation
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+
+# Cancel any previous runs of this workflow
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run arduino-lint
+        uses: arduino/arduino-lint-action@v1
+        with:
+          library-manager: update
+          project-type: library
+
+  build_test:
+    name: Build and Test
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v1
+        with:
+          python-version: '3.x'
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: Lualtek/workflows
+          path: ci
+      - name: Install
+        run: bash ci/scripts/devices/rak/actions_install.sh
+      ## TODO add from inputs maybe?
+      # - name: Extra libraries
+      #   run: |
+      #     /home/runner/work/RAK12033-IIM42652/RAK12033-IIM42652/bin/arduino-cli lib install SX126x-Arduino
+      - name: Build and Test
+        run: python3 ci/scripts/devices/rak/build_platform.py rak_platforms_rui-test
+
