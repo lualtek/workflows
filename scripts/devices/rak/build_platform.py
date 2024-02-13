@@ -120,12 +120,12 @@ def install_dependencies(build_dir):
                 if line.startswith("depends="):
                     dependencies = line.split("=")[1].strip().split(',')
                     for dep in dependencies:
-                        # Trim any leading/trailing spaces and remove version constraints for the CLI command
-                        dep_name = dep.split(' ')[0].strip()
-                        dep_version = ''.join(dep.split(' ')[1:]) if ' ' in dep else ""
-                        dep_version = dep_version.replace('(', '').replace(')', '').strip()
-                        dep_install_cmd = f"{dep_name}"
-                        if dep_version:  # Add version constraint if present
+                        # Extract the library name and optional version constraint
+                        dep_parts = dep.split('(')
+                        dep_name = dep_parts[0].strip()
+                        dep_version = dep_parts[1].replace(')', '').strip() if len(dep_parts) > 1 else ""
+                        dep_install_cmd = dep_name
+                        if dep_version:  # Append version constraint if present
                             dep_install_cmd += f"@{dep_version}"
                         ColorPrint.print_info(f"Installing dependency: {dep_install_cmd}")
                         run_command(f"arduino-cli lib install \"{dep_install_cmd}\"", f"FAILED to install dependency {dep_install_cmd}", True)
