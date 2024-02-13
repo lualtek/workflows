@@ -22,6 +22,7 @@ import sys
 import subprocess
 from pathlib import Path
 import os
+import re
 
 # Constants
 CROSS_MARK = "\N{cross mark}"
@@ -112,23 +113,31 @@ def install_platform(fqbn):
 
 
 def install_dependencies(build_dir):
-    """Install library dependencies listed in the library.properties file with version constraints."""
+    """Install library dependencies listed in the library.properties file with version constraints using regex."""
     properties_file = build_dir / "library.properties"
+    dep_pattern = re.compile(r"([^\s(]+)\s*(?:\(([^)]+)\))?")
+
     try:
         with open(properties_file, 'r') as file:
             for line in file:
                 if line.startswith("depends="):
                     dependencies = line.split("=")[1].strip().split(',')
                     for dep in dependencies:
-                        # Extract the library name and optional version constraint
-                        dep_parts = dep.split('(')
-                        dep_name = dep_parts[0].strip()
-                        dep_version = dep_parts[1].replace(')', '').strip() if len(dep_parts) > 1 else ""
-                        dep_install_cmd = dep_name
+                        match = dep_pattern.match(dep)
+                        if not match:
+                            ColorPrint.print_warn(f"Could not parse dependency: {dep}")
+                            continue
+
+                        dep_name, dep_version = match.groups()
+                        dep_install_cmd = f"{dep_name}"
                         if dep_version:  # Append version constraint if present
                             dep_install_cmd += f"@{dep_version}"
+
                         ColorPrint.print_info(f"Installing dependency: {dep_install_cmd}")
-                        run_command(f"arduino-cli lib install \"{dep_install_cmd}\"", f"FAILED to install dependency {dep_install_cmd}", True)
+                        command = f"arduino-cli lib install \"{dep_install_cmd}\""
+                        result = run_command(command, f"FAILED to install dependency {dep_install_cmd}", True)
+                        if result.returncode != 0:
+                            ColorPrint.print_fail(f"Error installing dependency: {dep_name} with version {dep_version}")
     except FileNotFoundError:
         ColorPrint.print_fail("No library.properties file found for dependency installation.")
         sys.exit(-1)
