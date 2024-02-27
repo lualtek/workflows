@@ -38,7 +38,7 @@ jobs:
         with:
           ssh-key: "${{ secrets.COMMIT_KEY }}"
       - name: Install Doppler CLI
-        uses: dopplerhq/cli-action@v2
+        uses: dopplerhq/cli-action@v3
 
       - name: Use Node Version ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -71,7 +71,7 @@ jobs:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
 
       - name: PR Comment
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         if: inputs.pr_comment
         env:
           out_log: ${{ steps.command.outputs.stdout }}

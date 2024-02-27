@@ -38,7 +38,7 @@ jobs:
         with:
           ssh-key: "${{ secrets.COMMIT_KEY }}"
       - name: Install Doppler CLI
-        uses: dopplerhq/cli-action@v2
+        uses: dopplerhq/cli-action@v3
 
       - name: Use Node Version ${{ matrix.node-version }}
         uses: actions/setup-node@v3
