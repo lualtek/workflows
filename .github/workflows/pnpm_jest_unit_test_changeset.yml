@@ -48,6 +48,12 @@ jobs:
           scope: "@lualtek"
           token: ${{ secrets.NPM_TOKEN_DOWNLOAD }}
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+          run_install: false
+
       - name: Get pnpm store directory
         shell: bash
         run: |
@@ -61,10 +67,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
-      - uses: pnpm/action-setup@v3
-        with:
-          run_install: true
-          version: 8
+      - name: Install dependencies
+        run: pnpm install
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_DOWNLOAD }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_DOWNLOAD }}
