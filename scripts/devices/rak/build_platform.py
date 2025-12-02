@@ -53,7 +53,6 @@ ALL_PLATFORMS = {
     "rak_platforms": ("rak4631", "rak11200", "rak11300"),
     "rak_platforms-test": ("rak4631", "rak11200", "rak11300"),
     "rak_platforms_rui-test": (
-        "rak4631-rui",
         "rak3172-evaluation-rui",
         "rak3172-T-rui",
     ),
