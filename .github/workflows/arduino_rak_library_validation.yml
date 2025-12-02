@@ -51,5 +51,5 @@ jobs:
         run: |
           arduino-cli core update-index
           ./ci/scripts/devices/rak/actions_install.sh
-          python3 ci/scripts/devices/rak/install_rak_platform.py rak_platforms_rui-test
+          python3 ci/scripts/devices/rak/build_platform.py rak_platforms_rui-test
 
