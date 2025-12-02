@@ -45,6 +45,8 @@ jobs:
         with:
           repository: Lualtek/workflows
           path: ci
+      - name: Remove Arduino cached cores/tools
+        run: rm -rf ~/.arduino15
       - name: Install Arduino CLI
         uses: arduino/setup-arduino-cli@v2
       - name: Install platform
