@@ -29,8 +29,11 @@ jobs:
         with:
           repository: Lualtek/workflows
           path: ci
-      - name: Install
-        run: bash ci/scripts/devices/rak/actions_install.sh
+      - name: Install Arduino CLI
+        uses: arduino/setup-arduino-cli@v2
+
+      - name: Action install
+        uses: ci/scripts/devices/rak/actions_install.sh
       ## TODO add from inputs maybe?
       # - name: Extra libraries
       #   run: |
