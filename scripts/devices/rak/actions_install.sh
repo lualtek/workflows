@@ -6,6 +6,8 @@ set -e
 
 pip3 install clint pyserial setuptools adafruit-nrfutil
 sudo apt-get update
+sudo apt-get install -y gcc-arm-none-eabi g++-arm-none-eabi
+
 
 # Make sure to cleanup
 rm -rf ${HOME}/.arduino15/packages/arduino
