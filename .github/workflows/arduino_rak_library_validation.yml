@@ -2,6 +2,10 @@ name: Arduino RAK Library Validation
 
 on:
   workflow_call:
+    inputs:
+      example_folder:
+        required: true
+        type: string
 
 jobs:
   lint:
@@ -41,17 +45,19 @@ jobs:
         with:
           python-version: '3.x'
       - uses: actions/checkout@v6
-      - uses: actions/checkout@v6
-        with:
-          repository: Lualtek/workflows
-          path: ci
-      - name: Remove Arduino cached cores/tools
-        run: rm -rf ~/.arduino15
+      # - uses: actions/checkout@v6
+      #   with:
+      #     repository: Lualtek/workflows
+      #     path: ci
       - name: Install Arduino CLI
         uses: arduino/setup-arduino-cli@v2
+
       - name: Install platform
         run: |
           arduino-cli core update-index
-          ./ci/scripts/devices/rak/actions_install.sh
-          python3 ci/scripts/devices/rak/build_platform.py rak_platforms_rui-test
+          arduino-cli core install ${{ matrix.arduino-platform }}
+
+      - name: Compile sketch
+        run: |
+          arduino-cli compile --fqbn ${{ matrix.fqbn }} ${{ inputs.example_folder }}
 
