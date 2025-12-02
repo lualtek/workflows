@@ -31,13 +31,10 @@ jobs:
           path: ci
       - name: Install Arduino CLI
         uses: arduino/setup-arduino-cli@v2
-
-      - name: Action install
-        uses: ci/scripts/devices/rak/actions_install.sh
-      ## TODO add from inputs maybe?
-      # - name: Extra libraries
-      #   run: |
-      #     /home/runner/work/RAK12033-IIM42652/RAK12033-IIM42652/bin/arduino-cli lib install SX126x-Arduino
-      - name: Build and Test
-        run: python3 ci/scripts/devices/rak/build_platform.py rak_platforms_rui-test
+      - name: Install platform
+        run: |
+          arduino-cli core update-index
+          arduino-cli core install ${{ matrix.arduino-platform }}
+          ./ci/scripts/devices/rak/actions_install.sh
+          python3 ci/scripts/devices/rak/install_rak_platform.py rak_platforms_rui-test
 
