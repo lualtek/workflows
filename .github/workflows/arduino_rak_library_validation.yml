@@ -10,7 +10,7 @@ on:
 jobs:
   lint:
     name: Lint
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v6
 
@@ -23,7 +23,7 @@ jobs:
   build_test:
     name: Build and Test
     needs: lint
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     strategy:
       matrix:
         # The matrix will produce one job for each configuration
