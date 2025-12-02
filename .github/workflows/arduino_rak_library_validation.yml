@@ -50,7 +50,6 @@ jobs:
       - name: Install platform
         run: |
           arduino-cli core update-index
-          arduino-cli core install ${{ matrix.arduino-platform }}
           ./ci/scripts/devices/rak/actions_install.sh
           python3 ci/scripts/devices/rak/install_rak_platform.py rak_platforms_rui-test
 
