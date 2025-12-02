@@ -16,12 +16,12 @@ jobs:
       matrix:
         node-version: [22.x]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install Doppler CLI
         uses: dopplerhq/cli-action@v3
 
       - name: Use Node Version ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
           registry-url: https://npm.pkg.github.com/

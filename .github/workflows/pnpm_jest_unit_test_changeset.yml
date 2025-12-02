@@ -34,14 +34,14 @@ jobs:
       matrix:
         node-version: [22.x]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ssh-key: "${{ secrets.COMMIT_KEY }}"
       - name: Install Doppler CLI
         uses: dopplerhq/cli-action@v3
 
       - name: Use Node Version ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
           registry-url: https://npm.pkg.github.com/
@@ -80,7 +80,7 @@ jobs:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
 
       - name: Test Report
-        uses: dorny/test-reporter@v1
+        uses: dorny/test-reporter@v2
         if: inputs.report && (success() || failure())    # run this step even if previous step failed
         with:
           name: Jest Tests

@@ -8,10 +8,10 @@ jobs:
     name: Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Run arduino-lint
-        uses: arduino/arduino-lint-action@v1
+        uses: arduino/arduino-lint-action@v2
         with:
           library-manager: update
           project-type: library
@@ -21,11 +21,11 @@ jobs:
     needs: lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-python@v1
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.x'
-      - uses: actions/checkout@v4
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
+      - uses: actions/checkout@v6
         with:
           repository: Lualtek/workflows
           path: ci
