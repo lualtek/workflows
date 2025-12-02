@@ -38,7 +38,7 @@ jobs:
         include:
           # This works like this: when the platform is "arduino:samd", the
           # variable `fqbn` is set to "arduino:samd:nano_33_iot".
-          - arduino-platform: "rak_rui:stm32"
+          - arduino-platform: "rak_rui:stm32@4.2.1"
             fqbn: "rak_rui:stm32:WisDuoRAK3172EvaluationBoard"
     steps:
       - uses: actions/checkout@v6
