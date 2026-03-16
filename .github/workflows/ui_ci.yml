@@ -77,12 +77,12 @@ jobs:
       # Used to avoid rate limit on Changeset check on pull request using the search api
       - name: Generate token custom GithHub Token from App
         id: generate_token
-        uses: tibdex/github-app-token@v1
+        uses: actions/create-github-app-token@v3
         with:
           # From ORG secrets
-          app_id: ${{ secrets.LUALTEK_RELEASE_APP_ID }}
+          app-id: ${{ secrets.LUALTEK_RELEASE_APP_ID }}
           # From ORG secrets
-          private_key: ${{ secrets.LUALTEK_RELEASE_APP_PRIVATE_KEY }}
+          private-key: ${{ secrets.LUALTEK_RELEASE_APP_PRIVATE_KEY }}
 
       - name: Create Release Pull Request or Publish to GitHub Packages
         id: changesets
